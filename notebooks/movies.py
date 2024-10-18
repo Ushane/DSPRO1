@@ -14,7 +14,9 @@ print(df.head())
 print(df.describe())
 
 
-# Assuming df is already loaded with your dataset
+# columns to keep
+columns_to_keep = ["adult",]
+
 
 # Convert popularity to numeric, invalid parsing will be set as NaN
 df['popularity'] = pd.to_numeric(df['popularity'], errors='coerce')
