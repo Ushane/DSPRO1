@@ -14,7 +14,6 @@ print(df.columns)
 df = pd.get_dummies(df, columns=['genres'], drop_first=True)
 
 # Select features and target
-# We're assuming 'budget', 'runtime', 'popularity' are already numeric and ready for use
 # Add the encoded 'genres', 'production_companies', and 'production_countries' as features
 X = df[['budget', 'runtime', 'popularity','revenue']]
 
