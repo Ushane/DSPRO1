@@ -16,12 +16,12 @@ df['revenue'] = pd.to_numeric(df['revenue'], errors='coerce')
 df['vote_average'] = pd.to_numeric(df['vote_average'], errors='coerce')
 df['vote_count'] = pd.to_numeric(df['vote_count'], errors='coerce')
 
-# Fill missing values with median, or drop rows with essential missing values if needed
-df['budget'].fillna(df['budget'].median(), inplace=True)
-df['popularity'].fillna(df['popularity'].median(), inplace=True)
-df['revenue'].fillna(df['revenue'].median(), inplace=True)
-df['vote_average'].fillna(df['vote_average'].median(), inplace=True)
-df['vote_count'].fillna(df['vote_count'].median(), inplace=True)
+# Replace zero values with NaN first, then fill with the median
+for col in ["budget", "popularity", "revenue", "vote_average", "vote_count"]:
+    # Replace zero values with NaN to treat them as missing
+    df[col].replace(0, pd.NA, inplace=True)
+    # Fill NaN values with the median of each column
+    df[col].fillna(df[col].median(), inplace=True)
 
 # Safely evaluate 'genres' column entries
 df['genres'] = df['genres'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else [])
