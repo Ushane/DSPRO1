@@ -6,6 +6,7 @@ import numpy as np
 
 # Load the processed dataset
 data_path = '/Users/shane/Documents/HSLU/SEM_3/MOVIERATINGS/data/processed/training_data.csv'
+data_path = '/Users/shane/Documents/HSLU/SEM_3/MovieRatings/data/processed/filtered_training_data.csv'
 data = pd.read_csv(data_path)
 
 # Define feature columns and target column
