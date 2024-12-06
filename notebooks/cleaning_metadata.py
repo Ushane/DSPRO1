@@ -36,9 +36,28 @@ genres_encoded = pd.DataFrame(mlb.fit_transform(df['genres']), columns=mlb.class
 # Concatenate the binary genre columns to the main DataFrame and drop 'genres' column
 df = pd.concat([df, genres_encoded], axis=1)
 df.drop('genres', axis=1, inplace=True)
+df.drop(columns=['Aniplex','BROSTA TV','Carousel Productions','GoHands','Mardock Scramble Production Committee','Odyssey Media','Pulser Productions','Rogue State','Sentai Filmworks','Telescene Film Group Productions','The Cartel','Vision View Entertainment'],axis=1,inplace=True)
 
 # Save the processed DataFrame to a CSV file
 processed_data_path = '/Users/shane/Documents/HSLU/SEM_3/MovieRatings/data/processed/movies_metadata_cleaned.csv'
 df.to_csv(processed_data_path, index=False)
 
 print("Data cleaned and saved successfully.")
+average_votecount = df['vote_count'].median()
+
+# Filter out movies with less than 11 votes
+vote_threshold = 30
+filtered_df = df[df['vote_count'] >= vote_threshold]
+
+# Check the impact of filtering
+print(f"Number of movies before filtering: {len(df)}")
+print(f"Number of movies after filtering: {len(filtered_df)}")
+
+# Save the filtered dataset
+filtered_data_path = '/Users/shane/Documents/HSLU/SEM_3/MOVIERATINGS/data/processed/filtered_training_data.csv'
+filtered_df.to_csv(filtered_data_path, index=False)
+
+average_votecount = filtered_df['vote_count'].median()
+print(f"average_votecount after filtering: {average_votecount}")
+
+print("Filtered dataset saved successfully!")
