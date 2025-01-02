@@ -45,7 +45,7 @@ df.to_csv(processed_data_path, index=False)
 print("Data cleaned and saved successfully.")
 average_votecount = df['vote_count'].median()
 
-# Filter out movies with less than 11 votes
+# Filter out movies with less than 30 votes
 vote_threshold = 30
 filtered_df = df[df['vote_count'] >= vote_threshold]
 
