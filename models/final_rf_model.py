@@ -3,11 +3,12 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
+import joblib as jl
 
 # Load the processed dataset
 data_path = '/Users/shane/Documents/HSLU/SEM_3/MOVIERATINGS/data/processed/training_data.csv'
 data_path = '/Users/shane/Documents/HSLU/SEM_3/MovieRatings/data/processed/filtered_training_data.csv'
-data_path = '/Users/shane/Documents/HSLU/SEM_3/MovieRatings/data/processed/filtered_training_data_castCount.csv'
+data_path = 'data/processed/filtered_training_data_actorCount_V2.csv'
 
 data = pd.read_csv(data_path)
 
@@ -33,6 +34,7 @@ mse_scores = -cross_val_score(model, X, y, scoring='neg_mean_squared_error', cv=
 r2_scores = cross_val_score(model, X, y, scoring='r2', cv=k)
 mae_scores = -cross_val_score(model, X, y, scoring='neg_mean_absolute_error', cv=k)
 
+jl.dump(model, "models/movie_ratings_prediction.joblib")
 
 # Calculate RMSE for each fold
 rmse_scores = np.sqrt(mse_scores)
