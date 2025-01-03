@@ -34,6 +34,8 @@ mse_scores = -cross_val_score(model, X, y, scoring='neg_mean_squared_error', cv=
 r2_scores = cross_val_score(model, X, y, scoring='r2', cv=k)
 mae_scores = -cross_val_score(model, X, y, scoring='neg_mean_absolute_error', cv=k)
 
+model.fit(X,y)
+
 jl.dump(model, "models/movie_ratings_prediction.joblib")
 
 # Calculate RMSE for each fold
