@@ -6,6 +6,9 @@ from collections import Counter
 # Load the dataset with cast information
 cast_df = pd.read_csv("data/archive/raw/credits.csv", usecols=["id", "cast"])
 
+# Ensure 'id' in cast_df is treated as int64
+cast_df['id'] = cast_df['id'].astype(int)
+
 # Extract actor names from the 'cast' column
 def extract_actor_names(cast_column):
     try:
@@ -33,9 +36,9 @@ plt.grid()
 plt.show()
 
 # Determine the threshold dynamically (e.g., actors appearing in at least 5% of movies)
-threshold = len(cast_df) * 0.05  # Actors appearing in 5% or more movies
+threshold = 5 # Actors appearing in 5% or more movies
 top_actors = [actor for actor, count in actor_counts.items() if count >= threshold]
-
+print(f"\n{top_actors}\n")
 print(f"Selected {len(top_actors)} actors based on the threshold.")
 
 # Create a feature for the count of top actors in each movie
@@ -44,10 +47,14 @@ def count_top_actors(actor_list):
 
 cast_df['top_actor_count'] = cast_df['actor_names'].apply(count_top_actors)
 
-# Merge with the movie metadata
-metadata_path = '/Users/shane/Documents/HSLU/SEM_3/MOVIERATINGS/data/processed/movies_metadata_cleaned.csv'
+# Load movie metadata
+metadata_path = '/Users/shane/Documents/HSLU/SEM_3/MovieRatings/data/processed/filtered_training_data.csv'
 metadata_df = pd.read_csv(metadata_path)
 
+# Ensure 'id' in metadata_df is treated as int64
+metadata_df['id'] = metadata_df['id'].astype(int)
+
+# Merge with the movie metadata
 merged_df = metadata_df.merge(cast_df[['id', 'top_actor_count']], on='id', how='left')
 merged_df['top_actor_count'].fillna(0, inplace=True)
 

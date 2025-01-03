@@ -24,6 +24,6 @@ top_cast_df = cast_df[['id', 'top_cast_numeric']]
 processed_data_path = '/Users/shane/Documents/HSLU/SEM_3/MOVIERATINGS/data/processed/top_cast_data.csv'
 
 # Save to a new CSV file
-top_cast_df.to_csv(processed_data_path, index=False)
+#top_cast_df.to_csv(processed_data_path, index=False)
 
 print("Dataset with top cast members (as numeric IDs) saved successfully!")
