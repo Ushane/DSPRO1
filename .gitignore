@@ -1,2 +1,3 @@
-presentation_plot.py.DS_Store*.joblib
+presentation_plot.py.DS_Store
+models/movie_ratings_prediction.joblib
 models/movie_ratings_prediction.joblib
