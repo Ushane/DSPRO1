@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import cross_val_score
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import numpy as np
 import joblib as jl
 
@@ -17,6 +17,8 @@ feature_columns = [col for col in data.columns if col not in ['id', 'vote_averag
 X = data[feature_columns]
 y = data['vote_average']
 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
 
 # Initialize the Random Forest Regressor with optimized hyperparameters
 model = RandomForestRegressor(
@@ -30,13 +32,23 @@ model = RandomForestRegressor(
 
 # Perform K-fold cross-validation
 k = 5  # Set the number of folds
-mse_scores = -cross_val_score(model, X, y, scoring='neg_mean_squared_error', cv=k)
-r2_scores = cross_val_score(model, X, y, scoring='r2', cv=k)
-mae_scores = -cross_val_score(model, X, y, scoring='neg_mean_absolute_error', cv=k)
+mse_scores = -cross_val_score(model, X_train, y_train, scoring='neg_mean_squared_error', cv=k)
+r2_scores = cross_val_score(model, X_train, y_train, scoring='r2', cv=k)
+mae_scores = -cross_val_score(model, X_train, y_train, scoring='neg_mean_absolute_error', cv=k)
 
-model.fit(X,y)
+model.fit(X_train,y_train)
 
-jl.dump(model, "models/movie_ratings_prediction.joblib")
+
+test_predictions = model.predict(X_test)
+test_mse = mean_squared_error(y_test, test_predictions)
+test_mae = mean_absolute_error(y_test,test_predictions)
+test_rmse = np.sqrt(test_mse)
+test_R2 = r2_score(y_test,test_predictions)
+print(f"Test MSE: {test_mse:.4f}")
+print(f"Test RMSE: {test_rmse:.4f}")
+print(f"Test MAE: {test_mae:.4f}")
+print(f"Test R2: {test_R2:.4f}")
+
 
 # Calculate RMSE for each fold
 rmse_scores = np.sqrt(mse_scores)
@@ -57,3 +69,6 @@ print(f"Cross-validated Mean Squared Error (MSE): {mean_mse:.4f} ± {std_mse:.4f
 print(f"Cross-validated Root Mean Squared Error (RMSE): {mean_rmse:.4f} ± {std_rmse:.4f}")
 print(f"Cross-validated Mean Absolute Error (MAE): {mean_mae:.4f} ± {std_mae:.4f}")
 print(f"Cross-validated R-squared: {mean_r2:.4f} ± {std_r2:.4f}")
+
+# Save the trained model
+#jl.dump(model, "models/movie_ratings_prediction.joblib")
