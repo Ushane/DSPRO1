@@ -38,16 +38,22 @@ mae_scores = -cross_val_score(model, X_train, y_train, scoring='neg_mean_absolut
 
 model.fit(X_train,y_train)
 
+X_test_array = X_test.values  
 
-test_predictions = model.predict(X_test)
-test_mse = mean_squared_error(y_test, test_predictions)
-test_mae = mean_absolute_error(y_test,test_predictions)
-test_rmse = np.sqrt(test_mse)
-test_R2 = r2_score(y_test,test_predictions)
-print(f"Test MSE: {test_mse:.4f}")
-print(f"Test RMSE: {test_rmse:.4f}")
-print(f"Test MAE: {test_mae:.4f}")
-print(f"Test R2: {test_R2:.4f}")
+# Get predictions from all trees
+all_tree_predictions = np.array([tree.predict(X_test_array) for tree in model.estimators_])
+
+# Calculate the mean prediction
+mean_prediction = np.mean(all_tree_predictions, axis=0)
+
+# Calculate the standard deviation of predictions
+std_dev = np.std(all_tree_predictions, axis=0)
+
+# Define a 95% confidence interval
+lower_bound = mean_prediction - 1.96 * std_dev
+upper_bound = mean_prediction + 1.96 * std_dev
+
+
 
 
 # Calculate RMSE for each fold
@@ -64,11 +70,32 @@ mean_mae = np.mean(mae_scores)
 std_mae = np.std(mae_scores)
 
 
+
 # Print the results
 print(f"Cross-validated Mean Squared Error (MSE): {mean_mse:.4f} ± {std_mse:.4f}")
 print(f"Cross-validated Root Mean Squared Error (RMSE): {mean_rmse:.4f} ± {std_rmse:.4f}")
 print(f"Cross-validated Mean Absolute Error (MAE): {mean_mae:.4f} ± {std_mae:.4f}")
 print(f"Cross-validated R-squared: {mean_r2:.4f} ± {std_r2:.4f}")
+
+
+test_predictions = model.predict(X_test)
+test_mse = mean_squared_error(y_test, test_predictions)
+test_mae = mean_absolute_error(y_test,test_predictions)
+test_rmse = np.sqrt(test_mse)
+test_R2 = r2_score(y_test,test_predictions)
+print(f"Test MSE: {test_mse:.4f}")
+print(f"Test RMSE: {test_rmse:.4f}")
+print(f"Test MAE: {test_mae:.4f}")
+print(f"Test R2: {test_R2:.4f}")
+
+
+
+# Print uncertainty interval for the first 5 predictions
+print("Uncertainty intervals for the first 5 predictions:")
+for i in range(5):
+    print(f"Prediction: {mean_prediction[i]:.2f}, 95% CI: [{lower_bound[i]:.2f}, {upper_bound[i]:.2f}]")
+
+    
 
 # Save the trained model
 #jl.dump(model, "models/movie_ratings_prediction.joblib")

@@ -9,9 +9,7 @@ df = pd.read_csv('/Users/shane/Documents/HSLU/SEM_3/DSPRO1/data/processed/cleane
 # Check the columns to ensure they exist
 print(df.columns)
 
-# One-hot encode categorical features like 'genres', 'production_companies', and 'production_countries'
-# We'll use get_dummies to transform these columns
-df = pd.get_dummies(df, columns=['genres'], drop_first=True)
+
 
 # Select features and target
 # Add the encoded 'genres', 'production_companies', and 'production_countries' as features

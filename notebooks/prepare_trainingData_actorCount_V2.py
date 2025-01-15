@@ -30,7 +30,7 @@ cast_df['top_actors_count'] = cast_df['cast'].apply(count_top_actors)
 cast_df[['id', 'top_actors_count']].to_csv("data/processed/movies_with_top_actors_count.csv", index=False)
 
 training_df = pd.merge(training_df,cast_df[['id', 'top_actors_count']],on = "id", how = "inner")
-training_df.to_csv("data/processed/filtered_training_data_actorCount_V2.csv")
+training_df.to_csv("data/processed/filtered_training_data_actorCount_V2.csv",index=False)
 
 # Display a sample of the dataset
 print("Sample data with 'top_actors_count' column:")
